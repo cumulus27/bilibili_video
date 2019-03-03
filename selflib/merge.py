@@ -8,7 +8,6 @@ Merge the video and the acc.
 import os
 import time
 import subprocess
-import BiliUtil
 from config import parameter as param
 from selflib.tools import *
 
