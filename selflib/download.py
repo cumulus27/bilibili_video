@@ -5,6 +5,7 @@
 Download video from bilibili.
 """
 
+import BiliUtil
 from BiliUtil.bili_album import Album
 from BiliUtil.bili_user import User
 from config import parameter as param
@@ -32,6 +33,9 @@ class VideoDownload:
         print("Start download: {}".format(info.name))
 
         self.video.get_album_data(base_path=param.path, name_path=True)
+
+    # def merge_video_file(self):
+    #     path = self.video.
 
 
 if __name__ == "__main__":

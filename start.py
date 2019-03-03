@@ -5,7 +5,7 @@
 Download video from bilibili.
 """
 
-from download import VideoDownload
+from selflib.download import VideoDownload
 from config import parameter as param
 
 
