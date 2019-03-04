@@ -100,6 +100,7 @@ class Video:
                 break
 
         self.raw_json_data = json_data
+        self.quality_des = self.quality_des.replace(" ", "")
 
         return self
 
@@ -117,10 +118,12 @@ class Video:
             temp_name = re.sub(r"[\/\\\:\*\?\"\<\>\|\s'‘’]", '_', self.name)
             temp_name = re.sub(r'[‘’]', '_', temp_name)
             if len(temp_name) == 0:
-                temp_name = self.cid
-            cache_path = base_path + '/{}'.format(temp_name)
+                temp_name = "cv" + str(self.cid)
+            # cache_path = base_path + '/{}'.format(temp_name)
+            cache_path = os.path.join(base_path, temp_name)
         else:
-            cache_path = base_path + '/{}'.format(self.cid)
+            # cache_path = base_path + '/{}'.format(self.cid)
+            cache_path = os.path.join(base_path,"cv" + str(self.cid))
         if not os.path.exists(cache_path):
             os.makedirs(cache_path)
 
@@ -129,6 +132,7 @@ class Video:
         # 使用两个进程分别下载视频和音频
         f.print_1('正在下载视频和配套音--', end='')
         f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+        self.cid = "cv" + str(self.cid)
         if self.audio is not None and self.video is not None:
             self.aria2c_download(cache_path, '{}_{}.aac'.format(self.cid, self.quality_des), self.audio)
             self.aria2c_download(cache_path, '{}_{}.flv'.format(self.cid, self.quality_des), self.video)
@@ -140,7 +144,8 @@ class Video:
             f.print_y('无需独立下载音频')
         f.print_cyan('==============================================================')
 
-        with open(cache_path + '/info.json', 'w', encoding='utf8') as file:
+        json_path = os.path.join(cache_path, "info.json")
+        with open(json_path, 'w', encoding='utf8') as file:
             file.write(str(json.dumps(self.get_dict_info(), ensure_ascii=False,
                                       sort_keys=True, indent=4, separators=(',', ': '))))
 
@@ -151,27 +156,28 @@ class Video:
         shell = 'aria2c -c -s 1 -d "{}" -o "{}" --referer="{}" "{}"'
         shell = shell.format(cache_path, file_name, referer, download_url)
         print("Download command:\n{}\n".format(shell))
-        # process = subprocess.Popen(shell, shell=True)
-        # process.wait()
+        process = subprocess.Popen(shell, shell=True)
+        process.wait()
 
-        # file_path = '{}/{}'.format(cache_path, file_name)
-        # if os.path.exists(file_path):
-        #     f.print_g('[OK]', end='')
-        #     f.print_1('文件{}下载成功--'.format(file_name), end='')
-        #     f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
-        # else:
-        #     f.print_r('[ERR]', end='')
-        #     f.print_1('文件{}下载失败--'.format(file_name), end='')
-        #     f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
-        #     f.print_r(shell.format(file_path, referer, download_url))
-        #     raise BaseException('av:{},cv:{},下载失败'.format(self.aid, self.cid))
+        file_path = '{}/{}'.format(cache_path, file_name)
+        if os.path.exists(file_path):
+            f.print_g('[OK]', end='')
+            f.print_1('文件{}下载成功--'.format(file_name), end='')
+            f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+        else:
+            f.print_r('[ERR]', end='')
+            f.print_1('文件{}下载失败--'.format(file_name), end='')
+            f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+            f.print_r(shell.format(file_path, referer, download_url))
+            raise BaseException('av:{},cv:{},下载失败'.format(self.aid, self.cid))
 
     def get_dict_info(self):
         json_data = vars(self).copy()
         return json_data
 
     def write_raw_json(self):
-        with open(self.cache_path + '/raw_info.json', 'w', encoding="utf8") as file:
+        json_path = os.path.join(self.cache_path, "raw_info.json")
+        with open(json_path, 'w', encoding="utf8") as file:
             json_info = json.dumps(self.raw_json_data, ensure_ascii=False,
                                    sort_keys=True, indent=4, separators=(',', ': '))
             file.write(json_info)
@@ -188,8 +194,9 @@ class Video:
 
         if len(self.video) > 1:
             for order, url in self.video:
-                print("Download {}_{}_{}.flv".format(self.cid, self.quality_des, order))
-                self.aria2c_download(cache_path, '{}_{}_{}.flv'.format(self.cid, self.quality_des, order), url)
+                file_name = "%s_%s_%03d.flv" % (self.cid, self.quality_des, int(order))
+                print("Download {}".format(file_name))
+                self.aria2c_download(cache_path, file_name, url)
 
             self.write_fragment_file(cache_path)
 
@@ -215,6 +222,3 @@ class Video:
                 f.write(cache_path.encode("utf8"))
         except Exception as e:
             print("There is something wrong: {}".format(e))
-
-
-

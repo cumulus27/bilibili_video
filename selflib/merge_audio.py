@@ -33,14 +33,13 @@ class Merge:
                         shell = 'ffmpeg -i "{}.flv" -i "{}.aac" -c copy -f mp4 -y "{}.mp4"'
                         command = shell.format(prefix, prefix, prefix)
                         print("Shell command:\n{}\n".format(command))
-                        # log_file = open(file_path + param.merge_log_path, 'w+')
                         process = subprocess.Popen(command,
                                                    stdout=subprocess.PIPE,
                                                    stderr=subprocess.PIPE)
                         print("Start merge ...\n")
                         cls.wait_and_print(process)
-                        # process.wait()
-                        # log_file.close()
+                        # process.communicate()
+
                         if os.path.exists(prefix + '.mp4'):
                             print_1('视频', end='')
                             print_cyan(file_name, end='')

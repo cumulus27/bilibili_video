@@ -5,9 +5,6 @@
 Merge the video and the acc.
 """
 
-import os
-import subprocess
-import BiliUtil
 from config import parameter as param
 from selflib.merge_audio import Merge
 

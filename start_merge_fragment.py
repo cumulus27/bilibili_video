@@ -25,6 +25,11 @@ class MergeTask:
 
     def start_merge(self):
         for path in self.list:
+            sep = os.path.sep
+            paths = path.split(sep)
+            paths.pop()
+            path = sep.join(paths)
+            print(path)
             FragmentMerge.start_merge(path, delete=False)
 
 
