@@ -5,11 +5,8 @@
 Merge the video and the acc.
 """
 
-import os
-import subprocess
-import BiliUtil
 from config import parameter as param
-from selflib.merge import Merge
+from selflib.merge_audio import Merge
 
 
 class MergeTask:
@@ -30,7 +27,7 @@ class MergeTask:
 
 if __name__ == "__main__":
 
-    file_path = param.merge_file_path
+    file_path = param.merge_audio_path
 
     merge = MergeTask()
     merge.get_list(file_path)

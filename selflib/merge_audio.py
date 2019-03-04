@@ -8,7 +8,6 @@ Merge the video and the acc.
 import os
 import time
 import subprocess
-import BiliUtil
 from config import parameter as param
 from selflib.tools import *
 
@@ -24,7 +23,8 @@ class Merge:
             path = os.path.abspath(path)  # 将路径替换为绝对路径
             file_list = os.listdir(path)  # 获取路径下文件列表
             for file in file_list:
-                file_path = path + '\\' + file
+                # file_path = path + '\\' + file
+                file_path = os.path.join(path, file)
                 file_name = os.path.splitext(file)[0]
                 prefix, suffix = os.path.splitext(file_path)
                 if suffix == '.flv':
@@ -33,14 +33,13 @@ class Merge:
                         shell = 'ffmpeg -i "{}.flv" -i "{}.aac" -c copy -f mp4 -y "{}.mp4"'
                         command = shell.format(prefix, prefix, prefix)
                         print("Shell command:\n{}\n".format(command))
-                        # log_file = open(file_path + param.merge_log_path, 'w+')
                         process = subprocess.Popen(command,
                                                    stdout=subprocess.PIPE,
                                                    stderr=subprocess.PIPE)
                         print("Start merge ...\n")
                         cls.wait_and_print(process)
-                        # process.wait()
-                        # log_file.close()
+                        # process.communicate()
+
                         if os.path.exists(prefix + '.mp4'):
                             print_1('视频', end='')
                             print_cyan(file_name, end='')

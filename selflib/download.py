@@ -31,6 +31,7 @@ class VideoDownload:
     def start_download(self):
         info = self.video.get_album_info()
         print("Start download: {}".format(info.name))
+        print("Video list length: {}".format(len(self.video.video_list)))
 
         self.video.get_album_data(base_path=param.path, name_path=True)
 

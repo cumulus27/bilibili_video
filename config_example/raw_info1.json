@@ -1,0 +1,237 @@
+{
+    "code": 0,
+    "data": {
+        "accept_description": [
+            "高清 1080P+",
+            "高清 1080P",
+            "高清 720P",
+            "清晰 480P",
+            "流畅 360P"
+        ],
+        "accept_format": "hdflv2,flv,flv720,flv480,flv360",
+        "accept_quality": [
+            112,
+            80,
+            64,
+            32,
+            16
+        ],
+        "dash": {
+            "audio": [
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-907",
+                        "indexRange": "908-22911"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 324012,
+                    "baseUrl": "http://upos-hz-mirrorcos.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30280.m4s?um_deadline=1551613875&platform=pc&rate=0&oi=22058951&um_sign=1792fe0a895577ebe0a9ed53c56c4ed4&gen=playurl&os=cos&trid=5f13d53b6f4f4fedafceec68974770e9",
+                    "codecid": 0,
+                    "codecs": "mp4a.40.2",
+                    "frameRate": "",
+                    "height": 0,
+                    "id": 30280,
+                    "mimeType": "audio/mp4",
+                    "sar": "",
+                    "startWithSap": 0,
+                    "width": 0
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-907",
+                        "indexRange": "908-22911"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 68703,
+                    "baseUrl": "http://upos-hz-mirrorwcsu.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30216.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=wcsu&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=3f69fd691cf4dcb12c7a3428667216c9",
+                    "codecid": 0,
+                    "codecs": "mp4a.40.2",
+                    "frameRate": "",
+                    "height": 0,
+                    "id": 30216,
+                    "mimeType": "audio/mp4",
+                    "sar": "",
+                    "startWithSap": 0,
+                    "width": 0
+                }
+            ],
+            "duration": 9151,
+            "minBufferTime": 1.5,
+            "video": [
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-1166",
+                        "indexRange": "1167-23134"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 289068,
+                    "baseUrl": "http://upos-hz-mirrorcosu.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30011.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&dynamic=1&gen=playurl&oi=22058951&os=cosu&platform=pc&rate=0&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&uipv=5&um_deadline=1551613875&um_sign=424cb8cc4c57673293d24255bd356d70&upsig=96f92f5fca874a857d645198a738ce90",
+                    "codecid": 12,
+                    "codecs": "hev1.1.6.L120.90",
+                    "frameRate": "16000/656",
+                    "height": 360,
+                    "id": 16,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 640
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-1172",
+                        "indexRange": "1173-23140"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 647492,
+                    "baseUrl": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30033.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=ks3u&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=1c926f032f8a8c267e2731213e33d78b",
+                    "codecid": 12,
+                    "codecs": "hev1.1.6.L120.90",
+                    "frameRate": "16000/656",
+                    "height": 480,
+                    "id": 32,
+                    "mimeType": "video/mp4",
+                    "sar": "640:639",
+                    "startWithSap": 1,
+                    "width": 852
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-1167",
+                        "indexRange": "1168-23135"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 1434092,
+                    "baseUrl": "http://upos-hz-mirrorwcsu.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30066.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=wcsu&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=854dcbb329b6b33e3ad9b4893c52cc6d",
+                    "codecid": 12,
+                    "codecs": "hev1.1.6.L120.90",
+                    "frameRate": "16000/656",
+                    "height": 720,
+                    "id": 64,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 1280
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-1168",
+                        "indexRange": "1169-23136"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 2150210,
+                    "baseUrl": "http://upos-hz-mirrorbsyu.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30077.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=bsyu&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=c45f96199653a8a14ed022fcbeff6157",
+                    "codecid": 12,
+                    "codecs": "hev1.1.6.L150.90",
+                    "frameRate": "16000/656",
+                    "height": 1080,
+                    "id": 80,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 1920
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-990",
+                        "indexRange": "991-22958"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 391889,
+                    "baseUrl": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30015.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=ks3u&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=ad44ce0a832583511a6476721bbe5d13",
+                    "codecid": 7,
+                    "codecs": "avc1.64001E",
+                    "frameRate": "16000/672",
+                    "height": 360,
+                    "id": 16,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 640
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-994",
+                        "indexRange": "995-22962"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 876436,
+                    "baseUrl": "http://upos-hz-mirrorcos.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30032.m4s?um_deadline=1551613875&platform=pc&rate=0&oi=22058951&um_sign=67ae412fb29b720c9155f2607858a0ff&gen=playurl&os=cos&trid=5f13d53b6f4f4fedafceec68974770e9",
+                    "codecid": 7,
+                    "codecs": "avc1.64001E",
+                    "frameRate": "16000/672",
+                    "height": 480,
+                    "id": 32,
+                    "mimeType": "video/mp4",
+                    "sar": "640:639",
+                    "startWithSap": 1,
+                    "width": 852
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-989",
+                        "indexRange": "990-22957"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 1736707,
+                    "baseUrl": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30064.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=ks3u&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=b08d9a91df426efd099885b3c285ee27",
+                    "codecid": 7,
+                    "codecs": "avc1.64001F",
+                    "frameRate": "16000/672",
+                    "height": 720,
+                    "id": 64,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 1280
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-990",
+                        "indexRange": "991-22958"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 2628606,
+                    "baseUrl": "http://upos-hz-mirrorks3u.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30080.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=ks3u&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=be75cc7ee6a7196609c3346d485511b5",
+                    "codecid": 7,
+                    "codecs": "avc1.640028",
+                    "frameRate": "16000/672",
+                    "height": 1080,
+                    "id": 80,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 1920
+                },
+                {
+                    "SegmentBase": {
+                        "Initialization": "0-982",
+                        "indexRange": "983-22950"
+                    },
+                    "backupUrl": null,
+                    "bandwidth": 5663853,
+                    "baseUrl": "http://upos-hz-mirrorkodou.acgvideo.com/upgcxcode/95/26/78882695/78882695-1-30112.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEVEuxTEto8i8o859r1qXg8xNEVE5XREto8GuFGv2U7SuxI72X6fTr859r1qXg8gNEVE5XREto8z5JZC2X2gkX5L5F1eTX1jkXlsTXHeux_f2o859IB_&deadline=1551613875&gen=playurl&nbs=1&oi=22058951&os=kodou&platform=pc&trid=5f13d53b6f4f4fedafceec68974770e9&uipk=5&upsig=f4074ff27f14903f2f04bbb24f6551eb",
+                    "codecid": 7,
+                    "codecs": "avc1.640028",
+                    "frameRate": "16000/672",
+                    "height": 1080,
+                    "id": 112,
+                    "mimeType": "video/mp4",
+                    "sar": "1:1",
+                    "startWithSap": 1,
+                    "width": 1920
+                }
+            ]
+        },
+        "format": "hdflv2",
+        "from": "local",
+        "message": "",
+        "quality": 112,
+        "result": "suee",
+        "seek_param": "start",
+        "seek_type": "offset",
+        "timelength": 9151377,
+        "video_codecid": 7
+    },
+    "message": "0",
+    "ttl": 1
+}
