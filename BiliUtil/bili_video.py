@@ -7,6 +7,8 @@ import subprocess
 import BiliUtil.static_value as v
 import BiliUtil.static_func as f
 
+import config.parameter as param
+
 
 class Video:
     cookie = None
@@ -89,7 +91,8 @@ class Video:
         elif 'durl' in json_data['data']:
             self.quality = json_data['data']['quality']
             self.length = json_data['data']['timelength']
-            self.video = json_data['data']['durl'][-1]['url']
+            # self.video = json_data['data']['durl'][-1]['url']
+            self.get_full_url_list(json_data)
 
         for index, val in enumerate(json_data['data']['accept_quality']):
             if val == self.quality:
@@ -129,8 +132,10 @@ class Video:
         if self.audio is not None and self.video is not None:
             self.aria2c_download(cache_path, '{}_{}.aac'.format(self.cid, self.quality_des), self.audio)
             self.aria2c_download(cache_path, '{}_{}.flv'.format(self.cid, self.quality_des), self.video)
+            self.write_audio_file(cache_path)
         if self.video is not None and self.audio is None:
-            self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), self.video)
+            # self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), self.video)
+            self.download_full_list(cache_path)
         else:
             f.print_y('无需独立下载音频')
         f.print_cyan('==============================================================')
@@ -146,20 +151,20 @@ class Video:
         shell = 'aria2c -c -s 1 -d "{}" -o "{}" --referer="{}" "{}"'
         shell = shell.format(cache_path, file_name, referer, download_url)
         print("Download command:\n{}\n".format(shell))
-        process = subprocess.Popen(shell)
-        process.wait()
+        # process = subprocess.Popen(shell, shell=True)
+        # process.wait()
 
-        file_path = '{}/{}'.format(cache_path, file_name)
-        if os.path.exists(file_path):
-            f.print_g('[OK]', end='')
-            f.print_1('文件{}下载成功--'.format(file_name), end='')
-            f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
-        else:
-            f.print_r('[ERR]', end='')
-            f.print_1('文件{}下载失败--'.format(file_name), end='')
-            f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
-            f.print_r(shell.format(file_path, referer, download_url))
-            raise BaseException('av:{},cv:{},下载失败'.format(self.aid, self.cid))
+        # file_path = '{}/{}'.format(cache_path, file_name)
+        # if os.path.exists(file_path):
+        #     f.print_g('[OK]', end='')
+        #     f.print_1('文件{}下载成功--'.format(file_name), end='')
+        #     f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+        # else:
+        #     f.print_r('[ERR]', end='')
+        #     f.print_1('文件{}下载失败--'.format(file_name), end='')
+        #     f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+        #     f.print_r(shell.format(file_path, referer, download_url))
+        #     raise BaseException('av:{},cv:{},下载失败'.format(self.aid, self.cid))
 
     def get_dict_info(self):
         json_data = vars(self).copy()
@@ -170,3 +175,46 @@ class Video:
             json_info = json.dumps(self.raw_json_data, ensure_ascii=False,
                                    sort_keys=True, indent=4, separators=(',', ': '))
             file.write(json_info)
+
+    def get_full_url_list(self, data):
+
+        url_list = []
+        for fragment in data['data']['durl']:
+            url_list.append((fragment["order"], fragment["url"]))
+
+        self.video = url_list
+
+    def download_full_list(self, cache_path):
+
+        if len(self.video) > 1:
+            for order, url in self.video:
+                print("Download {}_{}_{}.flv".format(self.cid, self.quality_des, order))
+                self.aria2c_download(cache_path, '{}_{}_{}.flv'.format(self.cid, self.quality_des, order), url)
+
+            self.write_fragment_file(cache_path)
+
+        else:
+            print("There is only one fragment.")
+            url = self.video[0][1]
+            self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), url)
+
+    @classmethod
+    def write_fragment_file(cls, cache_path):
+        cache_path += "\n"
+        try:
+            with open(param.merge_fragment_path, "ab+") as f:
+                f.write(cache_path.encode("utf8"))
+        except Exception as e:
+            print("There is something wrong: {}".format(e))
+
+    @classmethod
+    def write_audio_file(cls, cache_path):
+        cache_path += "\n"
+        try:
+            with open(param.merge_audio_path, "ab+") as f:
+                f.write(cache_path.encode("utf8"))
+        except Exception as e:
+            print("There is something wrong: {}".format(e))
+
+
+

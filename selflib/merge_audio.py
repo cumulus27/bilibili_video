@@ -23,7 +23,8 @@ class Merge:
             path = os.path.abspath(path)  # 将路径替换为绝对路径
             file_list = os.listdir(path)  # 获取路径下文件列表
             for file in file_list:
-                file_path = path + '\\' + file
+                # file_path = path + '\\' + file
+                file_path = os.path.join(path, file)
                 file_name = os.path.splitext(file)[0]
                 prefix, suffix = os.path.splitext(file_path)
                 if suffix == '.flv':

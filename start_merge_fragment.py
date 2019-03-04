@@ -9,7 +9,7 @@ import os
 import subprocess
 import BiliUtil
 from config import parameter as param
-from selflib.merge import Merge
+from selflib.merge_fragment import FragmentMerge
 
 
 class MergeTask:
@@ -25,12 +25,12 @@ class MergeTask:
 
     def start_merge(self):
         for path in self.list:
-            Merge.merge_video_file(path, delete=False)
+            FragmentMerge.start_merge(path, delete=False)
 
 
 if __name__ == "__main__":
 
-    file_path = param.merge_file_path
+    file_path = param.merge_fragment_path
 
     merge = MergeTask()
     merge.get_list(file_path)
