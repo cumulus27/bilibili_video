@@ -5,6 +5,7 @@
 Insert the av number to database from file.
 """
 
+import time
 from selflib.MySQLCommand import MySQLCommand
 import config.parameter as param
 
@@ -24,8 +25,9 @@ def insert_start():
         with open(file_path, "r") as f:
             line = f.readline()
             while line:
-                db1.insert_item("av", line.strip())
-                db2.insert_item("av", line.strip())
+                time_now = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time()))
+                db1.insert_item("aid, insert_time, download", "'{}', '{}', 0".format(line.strip(), time_now))
+                # db2.insert_item("aid, insert_time, download", "'{}', '{}', 0".format(line.strip(), time_now))
                 line = f.readline()
 
     except FileNotFoundError as e:

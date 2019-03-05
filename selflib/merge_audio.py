@@ -36,6 +36,12 @@ class Merge:
                 file_name = os.path.splitext(file)[0]
                 prefix, suffix = os.path.splitext(file_path)
                 if suffix == '.flv':
+                    if os.path.exists(prefix + '.mp4'):
+                        print_1('视频', end='')
+                        print_cyan(file_name, end='')
+                        print_1('已找到，跳过该文件')
+                        return
+
                     if os.path.exists(prefix + '.aac'):
                         print_b('已找到未合并文件{}，正在合并'.format(file_name))
                         shell = 'ffmpeg -i "{}.flv" -i "{}.aac" -c copy -f mp4 -y "{}.mp4"'

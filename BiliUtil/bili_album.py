@@ -8,6 +8,9 @@ import BiliUtil.static_value as v
 import BiliUtil.static_func as f
 from BiliUtil.bili_video import Video
 
+from selflib.MySQLCommand import MySQLCommand
+import config.parameter as param
+
 
 class Album:
     cookie = None
@@ -157,3 +160,19 @@ class Album:
             json_info = json.dumps(self.raw_json_data, ensure_ascii=False,
                                    sort_keys=True, indent=4, separators=(',', ': '))
             file.write(json_info)
+
+    # TODO(py) Complete the function.
+    def insert_into_database(self):
+        db1 = MySQLCommand(param.mysql_host, param.mysql_user, param.mysql_pass, param.mysql_database,
+                           param.mysql_charset, param.mysql_table1)
+
+        aid = db1.select_data(param.mysql_table1, "aid", "")
+        if aid:
+            print("The aid is already in the database, update.")
+            line = ""
+            db1.update_items("aid", self.aid, line)
+        else:
+            print("The aid is not in the database, create.")
+            key = ""
+            line = ""
+            db1.insert_item(key, line)

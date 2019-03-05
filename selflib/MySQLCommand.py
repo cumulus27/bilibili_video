@@ -52,11 +52,26 @@ class MySQLCommand:
         finally:
             db.close()
 
-    def update_status(self, scid, name, status):
+    def update_status(self, id_name, id_number, name, status):
         db = pymysql.connect(self.host, self.user, self.password, self.database_name, charset=self.char_set)
         try:
             cursor = db.cursor()
-            sql = "update {} set {}='{}' where SCID={}".format(self.table, name, status, scid)
+            sql = "update {} set {}='{}' where {}={}".format(self.table, name, status, id_name, id_number)
+            print("Update sql: {}".format(sql))
+            cursor.execute(sql)
+            # 提交到数据库执行
+            db.commit()
+
+        except Exception as e:
+            print("Update status wrong: {}".format(e))
+        finally:
+            db.close()
+
+    def update_items(self, id_name, id_number, lines):
+        db = pymysql.connect(self.host, self.user, self.password, self.database_name, charset=self.char_set)
+        try:
+            cursor = db.cursor()
+            sql = "update {} set {} where {}={}".format(self.table, lines, id_name, id_number)
             print("Update sql: {}".format(sql))
             cursor.execute(sql)
             # 提交到数据库执行
