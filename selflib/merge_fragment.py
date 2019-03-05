@@ -41,13 +41,14 @@ class FragmentMerge:
         out_name = cls.get_output_file_name(file_name)
         print("Merge the files to {}".format(out_name))
 
-        # 生成目标视频文件
-        final_clip.to_videofile(out_name, fps=24, remove_temp=False)
-
         sep = os.path.sep
         base_paths = movie_list[0].split(sep).pop()
         base_path = sep.join(base_paths)
         prefix = os.path.join(base_path, out_name)
+
+        # 生成目标视频文件
+        final_clip.to_videofile(prefix, fps=24, remove_temp=False)
+
         if os.path.exists(prefix):
             print_1('视频', end='')
             print_cyan(file_name, end='')

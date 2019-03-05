@@ -18,6 +18,14 @@ class Merge:
 
     @classmethod
     def merge_video_file(cls, path, delete=False):
+        """
+               Disassembles a given offset in the DEX file
+
+               :param path: offset to disassemble in the file (from the beginning of the file)
+               :type path: int
+               :param delete:
+               :type delete:
+               """
         # 完成目录下flv视频文件与aac音频文件的合并
         if os.path.exists(path) and os.path.isdir(path):
             path = os.path.abspath(path)  # 将路径替换为绝对路径

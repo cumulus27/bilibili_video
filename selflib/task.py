@@ -14,9 +14,9 @@ import config.parameter as param
 
 
 class ScanTask:
-    def __init__(self, apk_list, apk_path, result_path):
-        self.apk_list = apk_list
-        self.apk_path = apk_path
+    def __init__(self, scan_list, read_path, result_path):
+        self.scan_list = scan_list
+        self.read_path = read_path
         self.result_path = result_path
         self.scan_report = {}
         self.scan_result = {}
@@ -55,10 +55,10 @@ class ScanTask:
             self.running_scan.pop(self.finished_scan[i])
 
     def generate_id(self):
-        for i, apk_name in enumerate(self.apk_list):
-            file_path = self.apk_path + apk_name
+        for i, scan_name in enumerate(self.scan_list):
+            file_path = self.read_path + scan_name
             self.waiting_scan.update({i: file_path})
-            self.scan_result.update({i: {"name": apk_name, "path": file_path, "code": None, "time": 0}})
+            self.scan_result.update({i: {"name": scan_name, "path": file_path, "code": None, "time": 0}})
             self.scan_report.update({i: ""})
             self.report_dict.update({i: {}})
 
@@ -187,9 +187,9 @@ class ScanTask:
 
 class ScanThread(threading.Thread):
 
-    def __init__(self, apk_path, result_path):
+    def __init__(self, read_path, result_path):
         super(ScanThread, self).__init__()
-        self.apk_path = apk_path
+        self.read_path = read_path
         self.result_path = result_path
         self.return_code = None
         self.report_response = None

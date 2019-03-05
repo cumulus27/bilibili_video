@@ -1,0 +1,78 @@
+{
+    "code": 0,
+    "data": {
+        "aid": 43521684,
+        "attribute": 16512,
+        "cid": 76272227,
+        "copyright": 1,
+        "ctime": 1550199627,
+        "desc": "多多关注",
+        "dimension": {
+            "height": 360,
+            "rotate": 0,
+            "width": 640
+        },
+        "duration": 230,
+        "dynamic": "#雨宫天##LIVE##雨宮天#",
+        "no_cache": false,
+        "owner": {
+            "face": "http://i0.hdslb.com/bfs/face/11f217565887b25bb3a9ab515134043feab9eeeb.jpg",
+            "mid": 25437702,
+            "name": "mjv5"
+        },
+        "pages": [
+            {
+                "cid": 76272227,
+                "dimension": {
+                    "height": 360,
+                    "rotate": 0,
+                    "width": 640
+                },
+                "duration": 230,
+                "from": "vupload",
+                "page": 1,
+                "part": "【Live】Liar Rouge（CV.雨宫天）",
+                "vid": "",
+                "weblink": ""
+            }
+        ],
+        "pic": "http://i1.hdslb.com/bfs/archive/a3fb30371f82d23dfbff70d30bca98c6cdd706dd.jpg",
+        "pubdate": 1550199626,
+        "rights": {
+            "autoplay": 1,
+            "bp": 0,
+            "download": 1,
+            "elec": 0,
+            "hd5": 0,
+            "is_cooperation": 0,
+            "movie": 0,
+            "no_reprint": 1,
+            "pay": 0,
+            "ugc_pay": 0
+        },
+        "stat": {
+            "aid": 43521684,
+            "coin": 2,
+            "danmaku": 2,
+            "dislike": 0,
+            "favorite": 15,
+            "his_rank": 0,
+            "like": 8,
+            "now_rank": 0,
+            "reply": 5,
+            "share": 0,
+            "view": 297
+        },
+        "state": 0,
+        "subtitle": {
+            "allow_submit": true,
+            "list": []
+        },
+        "tid": 152,
+        "title": "【Live】Liar Rouge（CV.雨宫天）",
+        "tname": "官方延伸",
+        "videos": 1
+    },
+    "message": "0",
+    "ttl": 1
+}
