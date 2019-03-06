@@ -14,7 +14,7 @@ merge_audio_path = "config/merge_audio_list.txt"
 merge_piece_path = "config/merge_piece_list.txt"
 merge_piece_files_path = "config/merge_piece_files_list.txt"
 use_ffmpeg_to_merge_pieces = True  # Recommend
-use_ffmpeg_to_merge_audio = True  # Only chpice
+use_ffmpeg_to_merge_audio = True  # Only choice
 
 # File type
 file_types = [""]
@@ -29,13 +29,12 @@ txt_report = True
 # merge
 merge_piece_delete = False
 merge_audio_delete = False
+auto_merge = True
 
 # MySQL config
 mysql_host = "localhost"
 # mysql_user = "root"
 # mysql_pass = ""
-# mysql_user = "web"
-# mysql_pass = "Scan123456)"
 mysql_charset = 'utf8'
 mysql_database = "bilibili"
 mysql_table1 = "video_info"
@@ -54,11 +53,6 @@ item_table1 = """        aid CHAR(50) NOT NULL,
                          exit_code CHAR(20),
                          PRIMARY KEY (aid)
                          """
-
-item_table1_list = "scid, apk_name, app_name, package_name, version, method, detected, scan_data," \
-                   " detail_result, exitcode, try_times"
-
-item_table1_value = "'{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'"
 
 item_table2 = """        cid CHAR(50) NOT NULL,
                          aid CHAR(50),
