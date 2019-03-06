@@ -171,7 +171,7 @@ class Album:
                                    sort_keys=True, indent=4, separators=(',', ': '))
             file.write(json_info)
 
-    # TODO(py) Test this function.
+    # TODO(py) Test this function. Fix the bug of " '" in value.
     def insert_into_database(self):
         db1 = MySQLCommand(parameter.mysql_host, parameter.mysql_user, parameter.mysql_pass, parameter.mysql_database,
                            parameter.mysql_charset, parameter.mysql_table1)

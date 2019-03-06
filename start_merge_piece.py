@@ -6,10 +6,8 @@ Merge the video and the acc.
 """
 
 import os
-import subprocess
-import BiliUtil
 from config import parameter as param
-from selflib.merge_fragment import FragmentMerge
+from selflib.merge_piece import PieceMerge
 
 
 class MergeTask:
@@ -25,17 +23,17 @@ class MergeTask:
 
     def start_merge(self):
         for path in self.list:
-            sep = os.path.sep
-            paths = path.split(sep)
-            paths.pop()
-            path = sep.join(paths)
-            print(path)
-            FragmentMerge.start_merge(path, delete=False)
+            # sep = os.path.sep
+            # paths = path.split(sep)
+            # paths.pop()
+            # path = sep.join(paths)
+            # print(path)
+            PieceMerge.start_merge(path, delete=False)
 
 
 if __name__ == "__main__":
 
-    file_path = param.merge_fragment_path
+    file_path = param.merge_piece_path
 
     merge = MergeTask()
     merge.get_list(file_path)

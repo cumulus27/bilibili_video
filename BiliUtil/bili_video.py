@@ -168,20 +168,20 @@ class Video:
         shell = 'aria2c -c -s 1 -d "{}" -o "{}" --referer="{}" "{}"'
         shell = shell.format(cache_path, file_name, referer, download_url)
         print("Download command:\n{}\n".format(shell))
-        # process = subprocess.Popen(shell, shell=True)
-        # process.wait()
-        #
-        # file_path = '{}/{}'.format(cache_path, file_name)
-        # if os.path.exists(file_path):
-        #     f.print_g('[OK]', end='')
-        #     f.print_1('文件{}下载成功--'.format(file_name), end='')
-        #     f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
-        # else:
-        #     f.print_r('[ERR]', end='')
-        #     f.print_1('文件{}下载失败--'.format(file_name), end='')
-        #     f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
-        #     f.print_r(shell.format(file_path, referer, download_url))
-        #     raise BaseException('av:{},cv:{},下载失败'.format(self.aid, self.cid))
+        process = subprocess.Popen(shell, shell=True)
+        process.wait()
+
+        file_path = '{}/{}'.format(cache_path, file_name)
+        if os.path.exists(file_path):
+            f.print_g('[OK]', end='')
+            f.print_1('文件{}下载成功--'.format(file_name), end='')
+            f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+        else:
+            f.print_r('[ERR]', end='')
+            f.print_1('文件{}下载失败--'.format(file_name), end='')
+            f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
+            f.print_r(shell.format(file_path, referer, download_url))
+            raise BaseException('av:{},cv:{},下载失败'.format(self.aid, self.cid))
 
     def get_dict_info(self):
         json_data = vars(self).copy()
@@ -197,8 +197,8 @@ class Video:
     def get_full_url_list(self, data):
 
         url_list = []
-        for fragment in data['data']['durl']:
-            url_list.append((fragment["order"], fragment["url"]))
+        for piece in data['data']['durl']:
+            url_list.append((piece["order"], piece["url"]))
 
         self.video = url_list
 
@@ -210,20 +210,20 @@ class Video:
                 print("Download {}".format(file_name))
                 self.aria2c_download(cache_path, file_name, url)
 
-            self.write_fragment_file(cache_path)
+            self.write_piece_file(cache_path)
             if parameter.save_in_database:
                 self.update_status("piece_merge")
 
         else:
-            print("There is only one fragment.")
+            print("There is only one piece.")
             url = self.video[0][1]
             self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), url)
 
     @classmethod
-    def write_fragment_file(cls, cache_path):
+    def write_piece_file(cls, cache_path):
         cache_path += "\n"
         try:
-            with open(parameter.merge_fragment_path, "ab+") as f:
+            with open(parameter.merge_piece_path, "ab+") as f:
                 f.write(cache_path.encode("utf8"))
         except Exception as e:
             print("There is something wrong: {}".format(e))
@@ -246,11 +246,12 @@ class Video:
         length_s = int(self.length) / 1000
         m, s = divmod(length_s, 60)
         length_m = "%d:%02d" % (m, s)
+        cache_path = self.cache_path.replace("\\", "\\\\")
 
         key = "cid, aid, quality, title, length, path, quality_des, format," \
               " download_time, audio_merge, piece_merge, piece_delete"
         line = "'{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'"
-        line = line.format(self.cid, self.aid, self.quality, self.name, length_m, self.cache_path,
+        line = line.format(self.cid, self.aid, self.quality, self.name, length_m, cache_path,
                            self.quality_des, self.format, time_now, 1, 1, 0)
         db2.insert_item(key, line)
 
