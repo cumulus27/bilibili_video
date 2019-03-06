@@ -51,6 +51,7 @@ item_table1 = """        aid CHAR(50) NOT NULL,
                          ctime CHAR(20),
                          insert_time CHAR(255),
                          download CHAR(20),
+                         exit_code CHAR(20),
                          PRIMARY KEY (aid)
                          """
 
@@ -63,6 +64,7 @@ item_table2 = """        cid CHAR(50) NOT NULL,
                          aid CHAR(50),
                          quality CHAR(20),
                          title TEXT(200) character set utf8,
+                         length CHAR(255),
                          path TEXT(200) character set utf8,
                          quality_des TEXT(50) character set utf8,
                          format CHAR(255),
@@ -71,7 +73,7 @@ item_table2 = """        cid CHAR(50) NOT NULL,
                          audio_merge CHAR(20),
                          piece_merge CHAR(20),
                          piece_delete CHAR(20),
-                         exitcode CHAR(20),
+                         exit_code CHAR(20),
                          PRIMARY KEY (cid)
                          """
 

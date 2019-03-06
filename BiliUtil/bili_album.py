@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import time
 import requests
 from urllib import parse
 
@@ -9,7 +10,7 @@ import BiliUtil.static_func as f
 from BiliUtil.bili_video import Video
 
 from selflib.MySQLCommand import MySQLCommand
-import config.parameter as param
+import config.parameter as parameter
 
 
 class Album:
@@ -51,6 +52,8 @@ class Album:
         self.share = None
         self.view = None
         self.danmu = None
+        self.owner = None
+        self.dynamic = None
         self.video_list = list()
 
     def set_by_url(self, url):
@@ -95,6 +98,8 @@ class Album:
         self.share = json_data['data']['stat']['share']
         self.view = json_data['data']['stat']['view']
         self.danmu = json_data['data']['stat']['danmaku']
+        self.owner = json_data['data']['owner']['name']
+        self.dynamic = json_data['data']['dynamic']
         self.video_list = list()
 
         for page in json_data['data']['pages']:
@@ -103,6 +108,9 @@ class Album:
             self.video_list.append(cv)
 
         self.raw_json_data = json_data
+
+        if parameter.save_in_database:
+            self.insert_into_database()
 
         return self
 
@@ -143,6 +151,8 @@ class Album:
             file.write(json_info)
 
         self.write_raw_json()
+        if parameter.save_in_database:
+            self.update_download_status(0)
 
     def get_dict_info(self):
         json_data = vars(self).copy()
@@ -161,18 +171,34 @@ class Album:
                                    sort_keys=True, indent=4, separators=(',', ': '))
             file.write(json_info)
 
-    # TODO(py) Complete the function.
+    # TODO(py) Test this function.
     def insert_into_database(self):
-        db1 = MySQLCommand(param.mysql_host, param.mysql_user, param.mysql_pass, param.mysql_database,
-                           param.mysql_charset, param.mysql_table1)
+        db1 = MySQLCommand(parameter.mysql_host, parameter.mysql_user, parameter.mysql_pass, parameter.mysql_database,
+                           parameter.mysql_charset, parameter.mysql_table1)
 
-        aid = db1.select_data(param.mysql_table1, "aid", "")
+        aid = db1.select_data(parameter.mysql_table1, "aid", "where aid = {}".format(self.aid))
+        up_time = time.strftime("%Y-%m-%d %H:%M", time.localtime(self.time))
         if aid:
             print("The aid is already in the database, update.")
-            line = ""
+            line = "title = '{}', videos = '{}', owner = '{}', tname = '{}'," \
+                   " dynamic = '{}', detail = '{}', ctime = '{}', download = '{}'"
+            line = line.format(self.name, self.num, self.owner, self.zone,
+                               self.dynamic, self.desc, up_time, 1)
             db1.update_items("aid", self.aid, line)
         else:
             print("The aid is not in the database, create.")
-            key = ""
-            line = ""
+            time_now = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time()))
+            key = "aid, title, videos, owner, tname, dynamic, detail," \
+                  "ctime, insert_time, download"
+            line = "'{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'"
+            line = line.format(self.aid, self.name, self.num, self.owner, self.zone,
+                               self.dynamic, self.desc, up_time, time_now, 0)
             db1.insert_item(key, line)
+
+    def update_download_status(self, exit_code):
+        db1 = MySQLCommand(parameter.mysql_host, parameter.mysql_user, parameter.mysql_pass, parameter.mysql_database,
+                           parameter.mysql_charset, parameter.mysql_table1)
+
+        line = "download = '{}', exit_code = '{}' "
+        line = line.format(1, exit_code)
+        db1.update_items("aid", self.aid, line)
