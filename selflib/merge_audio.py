@@ -10,6 +10,7 @@ import time
 import subprocess
 from config import parameter as param
 from selflib.tools import *
+from selflib.MySQLCommand import MySQLCommand
 
 
 class Merge:
@@ -17,7 +18,17 @@ class Merge:
         pass
 
     @classmethod
-    def merge_video_file(cls, path, delete=False):
+    def merge_video_file(cls, path, delete=False, cid=None):
+        """
+               Disassembles a given offset in the DEX file
+
+               :param path: offset to disassemble in the file (from the beginning of the file)
+               :type path: str
+               :param delete:
+               :type delete: bool
+               :param cid:
+               :type cid: str
+               """
         # 完成目录下flv视频文件与aac音频文件的合并
         if os.path.exists(path) and os.path.isdir(path):
             path = os.path.abspath(path)  # 将路径替换为绝对路径
@@ -28,6 +39,12 @@ class Merge:
                 file_name = os.path.splitext(file)[0]
                 prefix, suffix = os.path.splitext(file_path)
                 if suffix == '.flv':
+                    if os.path.exists(prefix + '.mp4'):
+                        print_1('视频', end='')
+                        print_cyan(file_name, end='')
+                        print_1('已找到，跳过该文件')
+                        return
+
                     if os.path.exists(prefix + '.aac'):
                         print_b('已找到未合并文件{}，正在合并'.format(file_name))
                         shell = 'ffmpeg -i "{}.flv" -i "{}.aac" -c copy -f mp4 -y "{}.mp4"'
@@ -35,7 +52,8 @@ class Merge:
                         print("Shell command:\n{}\n".format(command))
                         process = subprocess.Popen(command,
                                                    stdout=subprocess.PIPE,
-                                                   stderr=subprocess.PIPE)
+                                                   stderr=subprocess.PIPE,
+                                                   shell=True)
                         print("Start merge ...\n")
                         cls.wait_and_print(process)
                         # process.communicate()
@@ -50,9 +68,15 @@ class Merge:
                                 os.remove(prefix + '.aac')
                                 print_1('，原始音视频', end='')
                                 print_r('已删除')
+
+                                if param.merge_audio_delete:
+                                    cls.update_database(cid, "piece_delete", 1)
                             else:
                                 print_1('，原始音视频', end='')
                                 print_y('未删除')
+
+                            if param.save_in_database:
+                                cls.update_database(cid, "audio_merge", 1)
                         else:
                             raise BaseException('视频与音频合并失败，不知道发生了什么')
                     else:
@@ -78,11 +102,23 @@ class Merge:
                 break
             time.sleep(2)
 
+    @classmethod
+    def update_database(cls, cid, merge_type, value):
+        db2 = MySQLCommand(param.mysql_host, param.mysql_user, param.mysql_pass, param.mysql_database,
+                           param.mysql_charset, param.mysql_table2)
+
+        time_now = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time()))
+        line = "{} = '{}', merge_time = '{}'"
+        line = line.format(merge_type, value, time_now)
+        cid = cid.replace("cv", "")
+        db2.update_items("cid", cid, line)
+
 
 if __name__ == "__main__":
 
     file_path = "D:\Code\github\Private\merge_test"
 
     Merge.merge_video_file(file_path)
+
 
 

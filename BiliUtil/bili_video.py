@@ -1,13 +1,17 @@
 import os
 import re
 import json
+import time
 import requests
 import subprocess
 
 import BiliUtil.static_value as v
 import BiliUtil.static_func as f
+from selflib.merge_audio import Merge
+from selflib.merge_piece import PieceMerge
 
-import config.parameter as param
+import config.parameter as parameter
+from selflib.MySQLCommand import MySQLCommand
 
 
 class Video:
@@ -23,6 +27,7 @@ class Video:
     length = None
     video = None
     audio = None
+    format = None
 
     raw_json_data = None
     cache_path = None
@@ -42,6 +47,7 @@ class Video:
         self.length = None
         self.video = None
         self.audio = None
+        self.format = None
 
     def set_cookie(self, cookie):
         if isinstance(cookie, dict):
@@ -99,6 +105,8 @@ class Video:
                 self.quality_des = json_data['data']['accept_description'][index]
                 break
 
+        self.format = json_data['data']['format']
+
         self.raw_json_data = json_data
         self.quality_des = self.quality_des.replace(" ", "")
 
@@ -129,6 +137,9 @@ class Video:
 
         self.cache_path = cache_path
 
+        if parameter.save_in_database:
+            self.insert_into_database()
+
         # 使用两个进程分别下载视频和音频
         f.print_1('正在下载视频和配套音--', end='')
         f.print_b('av:{},cv:{}'.format(self.aid, self.cid))
@@ -137,6 +148,14 @@ class Video:
             self.aria2c_download(cache_path, '{}_{}.aac'.format(self.cid, self.quality_des), self.audio)
             self.aria2c_download(cache_path, '{}_{}.flv'.format(self.cid, self.quality_des), self.video)
             self.write_audio_file(cache_path)
+            if parameter.save_in_database:
+                self.update_status("audio_merge", 0)
+                self.update_status("merge_type", 1)
+
+            if parameter.auto_merge:
+                merge = Merge()
+                merge.merge_video_file(cache_path, delete=parameter.merge_audio_delete, cid=self.cid)
+
         if self.video is not None and self.audio is None:
             # self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), self.video)
             self.download_full_list(cache_path)
@@ -185,8 +204,8 @@ class Video:
     def get_full_url_list(self, data):
 
         url_list = []
-        for fragment in data['data']['durl']:
-            url_list.append((fragment["order"], fragment["url"]))
+        for piece in data['data']['durl']:
+            url_list.append((piece["order"], piece["url"]))
 
         self.video = url_list
 
@@ -198,18 +217,28 @@ class Video:
                 print("Download {}".format(file_name))
                 self.aria2c_download(cache_path, file_name, url)
 
-            self.write_fragment_file(cache_path)
+            self.write_piece_file(cache_path)
+            if parameter.save_in_database:
+                self.update_status("piece_merge", 0)
+                self.update_status("merge_type", 2)
+
+            if parameter.auto_merge:
+                merge = PieceMerge()
+                merge.start_merge(cache_path, delete=parameter.merge_piece_delete, cid=self.cid)
 
         else:
-            print("There is only one fragment.")
+            print("There is only one piece.")
             url = self.video[0][1]
             self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), url)
 
+            if parameter.save_in_database:
+                self.update_status("merge_type", 0)
+
     @classmethod
-    def write_fragment_file(cls, cache_path):
+    def write_piece_file(cls, cache_path):
         cache_path += "\n"
         try:
-            with open(param.merge_fragment_path, "ab+") as f:
+            with open(parameter.merge_piece_path, "ab+") as f:
                 f.write(cache_path.encode("utf8"))
         except Exception as e:
             print("There is something wrong: {}".format(e))
@@ -218,7 +247,35 @@ class Video:
     def write_audio_file(cls, cache_path):
         cache_path += "\n"
         try:
-            with open(param.merge_audio_path, "ab+") as f:
+            with open(parameter.merge_audio_path, "ab+") as f:
                 f.write(cache_path.encode("utf8"))
         except Exception as e:
             print("There is something wrong: {}".format(e))
+
+    # TODO(py) Test this function.
+    def insert_into_database(self):
+        db2 = MySQLCommand(parameter.mysql_host, parameter.mysql_user, parameter.mysql_pass, parameter.mysql_database,
+                           parameter.mysql_charset, parameter.mysql_table2)
+
+        time_now = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time()))
+        length_s = int(self.length) / 1000
+        m, s = divmod(length_s, 60)
+        length_m = "%d:%02d" % (m, s)
+        cache_path = self.cache_path.replace("\\", "\\\\")
+
+        key = "cid, aid, quality, title, length, path, quality_des, format," \
+              " download_time, audio_merge, piece_merge, piece_delete"
+        line = "'{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'"
+        line = line.format(self.cid, self.aid, self.quality, self.name.replace("'", "\\'")
+                           , length_m, cache_path.replace("'", "\\'"),
+                           self.quality_des, self.format, time_now, 1, 1, 0)
+        db2.insert_item(key, line)
+
+    def update_status(self, merge_type, value):
+        db2 = MySQLCommand(parameter.mysql_host, parameter.mysql_user, parameter.mysql_pass, parameter.mysql_database,
+                           parameter.mysql_charset, parameter.mysql_table2)
+
+        line = "{} = '{}', exit_code = '{}'"
+        line = line.format(merge_type, value, 0)
+        cid = self.cid.replace("cv", "")
+        db2.update_items("cid", cid, line)
