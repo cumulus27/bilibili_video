@@ -21,10 +21,15 @@ file_types = [""]
 
 # Max retry time
 max_retry = 3
+max_thread = 5
 
 # Report type
 save_in_database = False
 txt_report = True
+
+# Source type
+from_txt = True
+from_database = True
 
 # merge
 merge_piece_delete = True
