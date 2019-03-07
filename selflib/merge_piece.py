@@ -8,6 +8,7 @@ from moviepy.editor import *
 
 from selflib.tools import *
 import config.parameter as param
+from selflib.MySQLCommand import MySQLCommand
 
 
 class PieceMerge:
@@ -16,7 +17,7 @@ class PieceMerge:
         pass
 
     @classmethod
-    def merge_piece(cls, movie_list, file_name, delete):
+    def merge_piece(cls, movie_list, file_name, delete, cid):
         """
             合并视频的方法
             @movie_list 按顺序排好的需要合并的视频
@@ -56,12 +57,18 @@ class PieceMerge:
                     os.remove(flv_file)
                 print_1('，原始音视频', end='')
                 print_r('已删除')
+
+                if param.merge_audio_delete:
+                    cls.update_database(cid, "piece_delete", 1)
             else:
                 print_1('，原始音视频', end='')
                 print_y('未删除')
 
+            if param.save_in_database:
+                cls.update_database(cid, "piece_merge", 1)
+
     @classmethod
-    def merge_piece_ffmpeg(cls, flv_list, file_name, delete):
+    def merge_piece_ffmpeg(cls, flv_list, file_name, delete, cid):
         return_code = cls.write_list_in_file(flv_list)
         if return_code == 1:
             return
@@ -77,7 +84,8 @@ class PieceMerge:
             # log_file = open(file_path + param.merge_log_path, 'w+')
             process = subprocess.Popen(command,
                                        stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
+                                       stderr=subprocess.PIPE,
+                                       shell=True)
             print("Start merge ...\n")
             # process.communicate()
             cls.wait_and_print(process)
@@ -92,9 +100,17 @@ class PieceMerge:
                         os.remove(flv_file)
                     print_1('，原始音视频', end='')
                     print_r('已删除')
+
+                    if param.merge_audio_delete:
+                        cls.update_database(cid, "piece_delete", 1)
+
                 else:
                     print_1('，原始音视频', end='')
                     print_y('未删除')
+
+                if param.save_in_database:
+                    cls.update_database(cid, "piece_merge", 1)
+
             else:
                 raise BaseException("Fail to merge.")
         else:
@@ -150,7 +166,18 @@ class PieceMerge:
             time.sleep(2)
 
     @classmethod
-    def start_merge(cls, path, delete=False):
+    def update_database(cls, cid, merge_type, value):
+        db2 = MySQLCommand(param.mysql_host, param.mysql_user, param.mysql_pass, param.mysql_database,
+                           param.mysql_charset, param.mysql_table2)
+
+        time_now = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time()))
+        line = "{} = '{}', merge_time = '{}'"
+        line = line.format(merge_type, value, time_now)
+        cid = cid.replace("cv", "")
+        db2.update_items("cid", cid, line)
+
+    @classmethod
+    def start_merge(cls, path, delete=False, cid=None):
         if os.path.exists(path) and os.path.isdir(path):
             path = os.path.abspath(path)  # 将路径替换为绝对路径
             file_list = os.listdir(path)  # 获取路径下文件列表
@@ -175,10 +202,10 @@ class PieceMerge:
 
             if param.use_ffmpeg_to_merge_pieces:
                 print("Use ffmpeg to merge.")
-                cls.merge_piece_ffmpeg(flv_list, file_name_example, delete)
+                cls.merge_piece_ffmpeg(flv_list, file_name_example, delete, cid)
             else:
                 print("Use moviepy to merge.")
-                cls.merge_piece(flv_list, file_name_example, delete)
+                cls.merge_piece(flv_list, file_name_example, delete, cid)
 
         else:
             raise BaseException("No such a direction:\n{}".format(path))

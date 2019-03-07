@@ -182,8 +182,9 @@ class Album:
             print("The aid is already in the database, update.")
             line = "title = '{}', videos = '{}', owner = '{}', tname = '{}'," \
                    " dynamic = '{}', detail = '{}', ctime = '{}', download = '{}'"
-            line = line.format(self.name, self.num, self.owner, self.zone,
-                               self.dynamic, self.desc, up_time, 1)
+            line = line.format(self.name.replace("'", "\\'"), self.num,
+                               self.owner.replace("'", "\\'"), self.zone,
+                               self.dynamic, self.desc.replace("'", "\\'"), up_time, 1)
             db1.update_items("aid", self.aid, line)
         else:
             print("The aid is not in the database, create.")
@@ -191,8 +192,9 @@ class Album:
             key = "aid, title, videos, owner, tname, dynamic, detail," \
                   "ctime, insert_time, download"
             line = "'{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'"
-            line = line.format(self.aid, self.name, self.num, self.owner, self.zone,
-                               self.dynamic, self.desc, up_time, time_now, 0)
+            line = line.format(self.aid, self.name.replace("'", "\\'"), self.num,
+                               self.owner.replace("'", "\\'"), self.zone,
+                               self.dynamic, self.desc.replace("'", "\\'"), up_time, time_now, 0)
             db1.insert_item(key, line)
 
     def update_download_status(self, exit_code):

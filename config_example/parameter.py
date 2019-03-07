@@ -23,12 +23,12 @@ file_types = [""]
 max_retry = 3
 
 # Report type
-save_in_database = True
+save_in_database = False
 txt_report = True
 
 # merge
-merge_piece_delete = False
-merge_audio_delete = False
+merge_piece_delete = True
+merge_audio_delete = True
 auto_merge = True
 
 # MySQL config
@@ -63,6 +63,7 @@ item_table2 = """        cid CHAR(50) NOT NULL,
                          quality_des TEXT(50) character set utf8,
                          format CHAR(255),
                          download_time CHAR(255),
+                         merge_type CHAR(20),
                          merge_time CHAR(255),
                          audio_merge CHAR(20),
                          piece_merge CHAR(20),

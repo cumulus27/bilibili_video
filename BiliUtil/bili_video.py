@@ -7,6 +7,8 @@ import subprocess
 
 import BiliUtil.static_value as v
 import BiliUtil.static_func as f
+from selflib.merge_audio import Merge
+from selflib.merge_piece import PieceMerge
 
 import config.parameter as parameter
 from selflib.MySQLCommand import MySQLCommand
@@ -147,7 +149,12 @@ class Video:
             self.aria2c_download(cache_path, '{}_{}.flv'.format(self.cid, self.quality_des), self.video)
             self.write_audio_file(cache_path)
             if parameter.save_in_database:
-                self.update_status("audio_merge")
+                self.update_status("audio_merge", 0)
+                self.update_status("merge_type", 1)
+
+            if parameter.auto_merge:
+                merge = Merge()
+                merge.merge_video_file(cache_path, delete=parameter.merge_audio_delete, cid=self.cid)
 
         if self.video is not None and self.audio is None:
             # self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), self.video)
@@ -212,12 +219,20 @@ class Video:
 
             self.write_piece_file(cache_path)
             if parameter.save_in_database:
-                self.update_status("piece_merge")
+                self.update_status("piece_merge", 0)
+                self.update_status("merge_type", 2)
+
+            if parameter.auto_merge:
+                merge = PieceMerge()
+                merge.start_merge(cache_path, delete=parameter.merge_piece_delete, cid=self.cid)
 
         else:
             print("There is only one piece.")
             url = self.video[0][1]
             self.aria2c_download(cache_path, '{}_{}.mp4'.format(self.cid, self.quality_des), url)
+
+            if parameter.save_in_database:
+                self.update_status("merge_type", 0)
 
     @classmethod
     def write_piece_file(cls, cache_path):
@@ -251,15 +266,16 @@ class Video:
         key = "cid, aid, quality, title, length, path, quality_des, format," \
               " download_time, audio_merge, piece_merge, piece_delete"
         line = "'{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'"
-        line = line.format(self.cid, self.aid, self.quality, self.name, length_m, cache_path,
+        line = line.format(self.cid, self.aid, self.quality, self.name.replace("'", "\\'")
+                           , length_m, cache_path.replace("'", "\\'"),
                            self.quality_des, self.format, time_now, 1, 1, 0)
         db2.insert_item(key, line)
 
-    def update_status(self, merge_type):
+    def update_status(self, merge_type, value):
         db2 = MySQLCommand(parameter.mysql_host, parameter.mysql_user, parameter.mysql_pass, parameter.mysql_database,
                            parameter.mysql_charset, parameter.mysql_table2)
 
         line = "{} = '{}', exit_code = '{}'"
-        line = line.format(merge_type, 0, 0)
+        line = line.format(merge_type, value, 0)
         cid = self.cid.replace("cv", "")
         db2.update_items("cid", cid, line)
